@@ -36,6 +36,8 @@ When you are done with the prompts the required dependencies will be installed a
 
 Next `cd` into your project and run the following command `code .` to open the project in Visual Studio Code. Alternatively you can open the project using your operating systems GUI.
 
+---
+
 ### Cleaning Up
 
 When setting up a Next.js project, the initial codebase will typically include some boilerplate code that is not necessary for your application.
@@ -98,6 +100,8 @@ In the root of your project create an `.env` file for storing the projects envir
 .env
 ```
 
+---
+
 ### Version Control
 
 When working on web applications or any project, it's crucial to use a version control tool like Git. Git commits should be made in concise, modular steps to facilitate easy tracking and potential future changes. You can save your changes using the following commands:
@@ -117,11 +121,15 @@ git commit -m "Initialized application"
 
 Alternatively, you can perform these steps using the Visual Studio Code's user interface (UI). This process should be carried out whenever you believe the project needs to be saved or when a feature is complete.
 
+---
+
 ### Creating a MongoDB Database
 
 This app uses a MongoDB database. To create a database login or create an account at [account.mongodb.com/account/login](https://account.mongodb.com/account/login).
 
 Next create a new project. After that, create a new database from your projects dashboard. While configuring the database create a new database user (this is used to connect with the db Prisma later).
+
+---
 
 ### Connecting to the Database with Prisma
 
@@ -262,5 +270,7 @@ npx prisma db push
 Now your MongoDB database should have the collections you defined in your Prisma schema file and connecting to the database is possible.
 
 If you encouter any problems with the last step please that ensure your `.env` file has the correct connection string and that your IP address is allowed to connect to the database (you might have a dynamic IP address so allowing access from anywhere might me needed in development).
+
+---
 
 ### Authentication
