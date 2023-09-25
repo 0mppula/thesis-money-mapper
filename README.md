@@ -186,7 +186,7 @@ This app has user authentication and the ability to record users financial data.
 
 These models auto-generate types for our application based on the models structure. Additionally, the `User` and `Account` models include fields for `next-auth`'s Prisma adapter which will be used when authenticating users later on.
 
-**Users model**
+#### Users model
 
 ```prisma
 model User {
@@ -204,7 +204,7 @@ model User {
 }
 ```
 
-**Account model**
+#### Account model
 
 ```prisma
 model Account {
@@ -227,7 +227,7 @@ model Account {
 }
 ```
 
-**FinancialRecord model**
+#### FinancialRecord model
 
 ```prisma
 model FinancialRecord {
@@ -270,6 +270,243 @@ npx prisma db push
 Now your MongoDB database should have the collections you defined in your Prisma schema file and connecting to the database is possible.
 
 If you encouter any problems with the last step please that ensure your `.env` file has the correct connection string and that your IP address is allowed to connect to the database (you might have a dynamic IP address so allowing access from anywhere might me needed in development).
+
+---
+
+### shadcn/ui
+
+[shadcn/ui](https://ui.shadcn.com/) provides accessible and customizable components that you can copy and paste into your apps. It's free & open source.
+
+This project will use shadcn/ui for its UI and styling is done with Tailwind CSS.
+
+#### Installation
+
+To start using shadcn/ui run the shadcn-ui init command to setup your project:
+
+```shell
+npx shadcn-ui@latest init
+```
+
+You will be asked a few questions to configure `components.json`. Below is the selected answers for this project, feel free to change some of them.
+
+```shell
+Would you like to use TypeScript (recommended)? yes
+Which style would you like to use? › New York
+Which color would you like to use as base color? › Slate
+Where is your global CSS file? › app/globals.css
+Do you want to use CSS variables for colors? › yes
+Where is your tailwind.config.js located? › tailwind.config.js
+Configure the import alias for components: › @/components
+Configure the import alias for utils: › @/lib/utils
+Are you using React Server Components? › yes
+```
+
+#### Installing new components
+
+Various shadcn/ui components are used throughout the app. Each component along with its dependencies needs to be installed seperately. Some of the components used are: `toast`, `button`, and `card` you can install them with the following commands:
+
+```shell
+npx shadcn-ui@latest add toast
+npx shadcn-ui@latest add button
+npx shadcn-ui@latest add card
+```
+
+Its easier to install components as you find the need for them with a single command. Check out the shadcn/ui [documentation](https://ui.shadcn.com/docs/components/) on how to install each component.
+
+---
+
+### Login Page
+
+The login page of the app is the landing page (pathname `/`), so it needs to be created in the root `page.tsx` file.
+
+For oragnizational purposes you can create a new `(site)` directory in the root of the project and place all the landing page specific files in it like its `page.tsx` file. This will keep the original functionality of the root `page.tsx` but structures the project differently ([route groups](https://nextjs.org/docs/app/building-your-application/routing/colocation#route-groups) are completely optional in Next.js 13).
+
+In `app/(site)/page.tsx` create the login page:
+
+#### page.tsx
+
+This is the login page with a wrapper styled with Tailwind CSS. It has a header and the actual login form component for user authentication.
+
+```jsx
+import { TypographyH1 } from '@/components/TypographyH1';
+import AuthForm from './components/AuthForm';
+
+export default function Home() {
+	return (
+		<div className="container flex flex-col items-center justify-center pb-[117px] py-12 min-h-[calc(100vh-69px)]">
+			<TypographyH1 center>Sign in to your account</TypographyH1>
+
+			<AuthForm />
+		</div>
+	);
+}
+```
+
+The login page uses the `TypographyH1` and `AuthForm` components.
+
+#### TypographyH1.tsx
+
+This is a reusable `h1` component that is used whenever an `h1` tag needs to be rendered on a page. Additionally, it can be centered with a prop.
+
+```jsx
+import { cn } from '@/lib/utils';
+
+interface TypographyH1Props {
+	children: React.ReactNode;
+	center?: boolean;
+}
+
+export function TypographyH1({ children, center }: TypographyH1Props) {
+	return (
+		<h1
+			className={cn(
+				'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl underline decoration-lime-800 dark:decoration-lime-400',
+				center && 'text-center'
+			)}
+		>
+			{children}
+		</h1>
+	);
+}
+```
+
+#### AuthForm.tsx
+
+This component is used to authenticate users. Since user authentication is yet to be implemented all the `next-auth` logic is commented out for now.
+
+```jsx
+'use client';
+
+import { ButtonWithIcon } from '@/components/ButtonWithIcon';
+import { useToast } from '@/components/ui/use-toast';
+// import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { FaGithub, FaGoogle } from 'react-icons/fa';
+
+const AuthForm = () => {
+	const [googleIsLoading, setGoogleIsLoading] = useState(false);
+	const [githubIsLoading, setGithubIsLoading] = useState(false);
+
+	const { toast } = useToast();
+
+	const socialAction = async (provider: string) => {
+		if (provider === 'google') {
+			setGoogleIsLoading(true);
+		}
+
+		if (provider === 'github') {
+			setGithubIsLoading(true);
+		}
+
+		// await signIn(provider, { callbackUrl: '/money' }).then((callback) => {
+		// 	if (callback?.error) {
+		// 		toast({
+		// 			description: 'Invalid credentials. Please try again.',
+		// 		});
+		// 	}
+		// });
+	};
+
+	return (
+		<form
+			className="gap-4 flex flex-col mt-4 lg:mt-8 px-4 py-6 sm:px-10 w-full sm:max-w-lg max-w-md rounded-xl border bg-card text-card-foreground shadow"
+			onSubmit={(e) => e.preventDefault()}
+		>
+			<ButtonWithIcon
+				loading={googleIsLoading}
+				disabled={googleIsLoading || githubIsLoading}
+				type="button"
+				className="w-full"
+				icon={FaGoogle}
+				onClick={() => socialAction('google')}
+			>
+				Continue with Google
+			</ButtonWithIcon>
+
+			<ButtonWithIcon
+				loading={githubIsLoading}
+				disabled={googleIsLoading || githubIsLoading}
+				type="button"
+				className="w-full"
+				icon={FaGithub}
+				onClick={() => socialAction('github')}
+			>
+				Continue with Github
+			</ButtonWithIcon>
+		</form>
+	);
+};
+
+export default AuthForm;
+```
+
+#### ButtonWithIcon.tsx
+
+This component renders a shadcn/ui `button` element with either a loader or another `react-icons` icon and is used throughout the app.
+
+This component needs the `react-icons` npm package install it with:
+
+```shell
+npm install react-icons
+```
+
+```jsx
+import { Button, ButtonProps } from '@/components/ui/button';
+import React from 'react';
+import { IconType } from 'react-icons';
+import { ImSpinner8 } from 'react-icons/im';
+
+interface ButtonWithIconProps extends ButtonProps {
+	children?: React.ReactNode;
+	icon?: IconType;
+	loading?: boolean;
+}
+
+export function ButtonWithIcon({ icon: Icon, loading, children, ...props }: ButtonWithIconProps) {
+	return (
+		<Button {...props} disabled={loading || props.disabled}>
+			{children}{' '}
+			{loading ? (
+				<ImSpinner8 className="ml-2 h-4 w-4 animate-spin" />
+			) : Icon ? (
+				<Icon className="ml-2 h-4 w-4" />
+			) : (
+				<></>
+			)}
+		</Button>
+	);
+}
+```
+
+#### RootLayout.tsx
+
+Lastly, update the `RootLayout.tsx` to have some Tailwind CSS classes. Optionally, create a helper function for genereating the title for you app and store the description in a different file for easier use in other sections of the app:
+
+```jsx
+import { mainAppDescription } from '@/constants';
+import { cn } from '@/lib/utils';
+import createAppTitle from '@/utils/createAppTitle';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+
+import './globals.css';
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+	title: createAppTitle('Sign in'),
+	description: mainAppDescription,
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+	return (
+		<html className={cn(inter.className, 'antialiased')} lang="en" suppressHydrationWarning>
+			<body className="min-h-screen text-slate-900 dark:text-slate-50 bg-slate-100 dark:bg-slate-950 antialiased pt-[68px] pb-16">
+				{children}
+			</body>
+		</html>
+	);
+}
+```
 
 ---
 

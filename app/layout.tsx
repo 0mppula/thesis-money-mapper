@@ -1,19 +1,23 @@
-import './globals.css';
+import { mainAppDescription } from '@/constants';
+import { cn } from '@/lib/utils';
+import createAppTitle from '@/utils/createAppTitle';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Money Mapper',
-	description:
-		'Take control of your finances with Money Mapper, the ultimate app to track & manage your money. Visualize your income, expenses, assets, and debts in one place.',
+	title: createAppTitle('Sign in'),
+	description: mainAppDescription,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
-			<body className={inter.className}>{children}</body>
+		<html className={cn(inter.className, 'antialiased')} lang="en" suppressHydrationWarning>
+			<body className="min-h-screen text-slate-900 dark:text-slate-50 bg-slate-100 dark:bg-slate-950 antialiased pt-[68px] pb-16">
+				{children}
+			</body>
 		</html>
 	);
 }
