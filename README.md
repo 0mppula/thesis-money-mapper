@@ -511,3 +511,145 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ---
 
 ### Authentication
+
+Saving user data on authentication requires quering the database.
+
+#### Prisma Client Instantiation
+
+In order to communicate with the database a `Prisma Client` needs to be instantiated. Create a `db.ts` file in the `lib` directory.
+
+This code ensures that only a single client is instantiated (singelton).
+
+```ts
+import { PrismaClient } from '@prisma/client';
+
+declare global {
+	var prisma: PrismaClient | undefined;
+}
+
+const client = globalThis.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV === 'development') {
+	globalThis.prisma = client;
+}
+
+export default client;
+```
+
+#### Next-auth Installation
+
+NextAuth.js is a complete open-source authentication solution for Next.js applications.
+
+To setup user authentication with `next-auth` install it with npm:
+
+```shell
+npm install next-auth
+```
+
+Additionally, to save user data a Prisma adapters is needed, which can be installed with:
+
+```shell
+npm install @prisma/client @auth/prisma-adapter
+npm install prisma --save-dev
+```
+
+#### Next-auth Configuration
+
+To make the authenticated user session and the `JWT` from `next-auth` type safe they need to be typed. create a new `types` directory in the root of the project with a `next-auth.d.ts` file in it.
+
+Declare a new `JWT` module and add an `id` field with a type of `string` to it. Also declare a `Session` module that extends the User type with an the same `id` field.
+
+```ts
+/* eslint-disable no-unused-vars */
+import type { Session, User } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+
+type UserId = string;
+
+declare module 'next-auth/jwt' {
+	interface JWT {
+		id: UserId;
+	}
+}
+
+declare module 'next-auth' {
+	interface Session {
+		user: User & {
+			id: UserId;
+		};
+	}
+}
+```
+
+Now the user session and the JWT is type safe for authentication purposes.
+
+#### Creating an API for Authentication
+
+User authentication needs its own api route since it makes API calls to the database. Create a new `api/auth/[...nextauth]` directory in the `app` directory and create a `route.ts` file in it:
+
+```ts
+import NextAuth, { AuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import db from '@/lib/db';
+
+export const authOptions: AuthOptions = {
+	adapter: PrismaAdapter(db),
+	providers: [
+		GoogleProvider({
+			clientId: process.env.GOOGLE_CLIENT_ID as string,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+		}),
+		GitHubProvider({
+			clientId: process.env.GITHUB_CLIENT_ID as string,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+		}),
+	],
+	debug: process.env.NODE_ENV === 'development',
+	session: {
+		strategy: 'jwt',
+	},
+	callbacks: {
+		jwt: async ({ token }) => {
+			const db_user = await db.user.findFirst({
+				where: {
+					email: token?.email as string,
+				},
+			});
+
+			if (db_user) {
+				token.id = db_user.id;
+			}
+
+			return token;
+		},
+		async session({ token, session }) {
+			if (token) {
+				session.user.id = token.id;
+				session.user.name = token.name;
+				session.user.email = token.email;
+				session.user.image = token.picture;
+			}
+
+			return session;
+		},
+	},
+	pages: {
+		signIn: '/',
+	},
+	secret: process.env.NEXTAUTH_SECRET as string,
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
+```
+
+Explain the file:
+
+#### Google Provider
+
+#### GitHub Provider
+
+---
