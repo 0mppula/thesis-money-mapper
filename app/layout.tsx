@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
+import NextSessionProvider from '@/components/providers/NextSessionProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html className={cn(inter.className, 'antialiased')} lang="en" suppressHydrationWarning>
 			<body className="min-h-screen text-slate-900 dark:text-slate-50 bg-slate-100 dark:bg-slate-950 antialiased pt-[68px] pb-16">
-				{children}
+				<NextSessionProvider>{children}</NextSessionProvider>
 			</body>
 		</html>
 	);

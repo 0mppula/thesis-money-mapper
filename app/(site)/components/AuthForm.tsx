@@ -2,7 +2,7 @@
 
 import { ButtonWithIcon } from '@/components/ButtonWithIcon';
 import { useToast } from '@/components/ui/use-toast';
-// import { signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 
@@ -21,13 +21,13 @@ const AuthForm = () => {
 			setGithubIsLoading(true);
 		}
 
-		// await signIn(provider, { callbackUrl: '/money' }).then((callback) => {
-		// 	if (callback?.error) {
-		// 		toast({
-		// 			description: 'Invalid credentials. Please try again.',
-		// 		});
-		// 	}
-		// });
+		await signIn(provider, { callbackUrl: '/money' }).then((callback) => {
+			if (callback?.error) {
+				toast({
+					description: 'Invalid credentials. Please try again.',
+				});
+			}
+		});
 	};
 
 	return (

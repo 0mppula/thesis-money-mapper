@@ -583,7 +583,7 @@ declare module 'next-auth' {
 
 Now the user session and the JWT is type safe for authentication purposes.
 
-#### Creating an API for Authentication
+#### Authentication API
 
 User authentication needs its own api route since it makes API calls to the database. Create a new `api/auth/[...nextauth]` directory in the `app` directory and create a `route.ts` file in it:
 
@@ -648,8 +648,103 @@ export { handler as GET, handler as POST };
 
 Explain the file:
 
+-   `adapter`: By default NextAuth.js does not include an adapter. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the adapter [documentation](https://authjs.dev/reference/adapters).
+-   `providers`: An array of authentication providers for signing in (e.g. Google, GitHub, etc) in any order. See the providers [documentation](https://next-auth.js.org/configuration/providers/oauth) for a list of supported providers and how to use them.
+
+-   `debug`: Set debug to true to enable debug messages for authentication and database operations.
+-   `session`: The session object and all properties on it are optional. The default `strategy` is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
+-   `callbacks`: Callbacks are asynchronous functions you can use to control what happens when an action is performed. Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs. In this implementation the callback function checks if an authenticated user exists on the database and adds its id to the token.
+-   `pages`: Specify URLs to be used if you want to create custom sign in, sign out and error pages. Pages specified will override the corresponding built-in page.
+-   `secret`: The default value is a string (SHA hash of the "options" object) in development, no default in production. In production this is required.
+
 #### Google Provider
 
+To start using a Google provider you need to add entries for `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in the `.env` file.
+
+You can get the values for these by logging into your [Google Cloud](https://console.cloud.google.com/) and creating a new project.
+
+Then open the project and navigate to the "OAuth consent screen" page and create an OAuth consent screen.
+
+Afterwards, create an OAuth client ID from the "credentials" page. Set the `Authorized JavaScript origins` to "http://localhost:3000 and the `Authorized redirect URIs` to "http://localhost:3000/api/auth/callback/google/". These values must be changed to your deployment domain when in production.
+
+Copy the `Client ID` and `Client secret` values provided to you by Google, and add them to the `.env` file.
+
+```.env
+GOOGLE_CLIENT_ID=<GOOGLE_CLIENT_ID>
+GOOGLE_CLIENT_SECRET=<GOOGLE_CLIENT_SECRET>
+```
+
 #### GitHub Provider
+
+To start using a GitHub provider you need to add entries for `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the `.env` file.
+
+You can get the values for these by logging into your GitHub account and navigating to [settings/developers](https://github.com/settings/developers) and creating a new OAuth App from the "New OAuth App" button.
+
+Set the `Homepage URL` to "http://localhost:3000" and the `Authorization callback URL` to "http://localhost:3000". These values must be changed to your deployment domain when in production.
+
+Copy the `Client ID` and `Client secret` values provided to you by GitHub, and add them to the `.env` file.
+
+```.env
+GITHUB_CLIENT_ID=<GITHUB_CLIENT_ID>
+GITHUB_CLIENT_SECRET=<GITHUB_CLIENT_SECRET>
+```
+
+#### Adding Authentication Logic to the Client
+
+In the `AuthForm` component uncomment the previously commented logic:
+
+```jsx
+import { signIn } from 'next-auth/react';
+...
+
+await signIn(provider, { callbackUrl: '/money' }).then((callback) => {
+	if (callback?.error) {
+		toast({
+			description: 'Invalid credentials. Please try again.',
+		});
+	}
+});
+...
+```
+
+Lastly, to have access to the authenticated users session on the client it needs to be wrapped in a `SessionProvider` component. Additionally to have access to dark / light modes later on, install the `next-themes` package with npm and wrap the `SessionProvider` with a `ThemeProvider` component.
+
+```shell
+npm i next-themes
+```
+
+**components/providers/NextSessionProvider.tsx**
+
+```jsx
+'use client';
+
+import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from 'next-themes';
+import React from 'react';
+
+interface NextSessionProviderProps {
+	children: React.ReactNode;
+}
+
+const NextSessionProvider = ({ children }: NextSessionProviderProps) => {
+	return (
+		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+			<SessionProvider>{children}</SessionProvider>
+		</ThemeProvider>
+	);
+};
+
+export default NextSessionProvider;
+```
+
+**app/layout.tsx**
+
+```jsx
+<body>
+	<NextSessionProvider>{children}</NextSessionProvider>
+</body>
+```
+
+Now the authentication is configured on the client and you can try logging in!
 
 ---
