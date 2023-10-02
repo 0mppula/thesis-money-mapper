@@ -5,6 +5,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import db from '@/lib/db';
 
 export const authOptions: AuthOptions = {
+	// @ts-ignore
 	adapter: PrismaAdapter(db),
 	providers: [
 		GoogleProvider({

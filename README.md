@@ -72,7 +72,7 @@ const config: Config = {
 
 In `app/page.tsx` remove all the boilerplate `jsx` inside of the `main` tag and remove its className. Additionally, eliminate all unused import statements.
 
-```jsx
+```tsx
 // app/page.tsx
 <main>
 	<p>Hello World!</p>
@@ -83,7 +83,7 @@ In `app/page.tsx` remove all the boilerplate `jsx` inside of the `main` tag and 
 
 Replace the default metadata in the root layout of the project.
 
-```jsx
+```tsx
 // app/layout.tsx
 export const metadata: Metadata = {
 	title: 'Money Mapper',
@@ -327,7 +327,7 @@ In `app/(site)/page.tsx` create the login page:
 
 This is the login page with a wrapper styled with Tailwind CSS. It has a header and the actual login form component for user authentication.
 
-```jsx
+```tsx
 import { TypographyH1 } from '@/components/TypographyH1';
 import AuthForm from './components/AuthForm';
 
@@ -348,7 +348,7 @@ The login page uses the `TypographyH1` and `AuthForm` components.
 
 This is a reusable `h1` component that is used whenever an `h1` tag needs to be rendered on a page. Additionally, it can be centered with a prop.
 
-```jsx
+```tsx
 import { cn } from '@/lib/utils';
 
 interface TypographyH1Props {
@@ -374,7 +374,7 @@ export function TypographyH1({ children, center }: TypographyH1Props) {
 
 This component is used to authenticate users. Since user authentication is yet to be implemented all the `next-auth` logic is commented out for now.
 
-```jsx
+```tsx
 'use client';
 
 import { ButtonWithIcon } from '@/components/ButtonWithIcon';
@@ -450,7 +450,7 @@ This component needs the `react-icons` npm package install it with:
 npm install react-icons
 ```
 
-```jsx
+```tsx
 import { Button, ButtonProps } from '@/components/ui/button';
 import React from 'react';
 import { IconType } from 'react-icons';
@@ -482,7 +482,7 @@ export function ButtonWithIcon({ icon: Icon, loading, children, ...props }: Butt
 
 Lastly, update the `RootLayout.tsx` to have some Tailwind CSS classes. Optionally, create a helper function for genereating the title for you app and store the description in a different file for easier use in other sections of the app:
 
-```jsx
+```tsx
 import { mainAppDescription } from '@/constants';
 import { cn } from '@/lib/utils';
 import createAppTitle from '@/utils/createAppTitle';
@@ -657,6 +657,8 @@ Explain the file:
 -   `pages`: Specify URLs to be used if you want to create custom sign in, sign out and error pages. Pages specified will override the corresponding built-in page.
 -   `secret`: The default value is a string (SHA hash of the "options" object) in development, no default in production. In production this is required.
 
+Also add a new `NEXTAUTH_SECRET` entry in the `.env`. This can be a random string.
+
 #### Google Provider
 
 To start using a Google provider you need to add entries for `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in the `.env` file.
@@ -693,7 +695,7 @@ GITHUB_CLIENT_SECRET=<GITHUB_CLIENT_SECRET>
 
 In the `AuthForm` component uncomment the previously commented logic:
 
-```jsx
+```tsx
 import { signIn } from 'next-auth/react';
 ...
 
@@ -715,7 +717,7 @@ npm i next-themes
 
 **components/providers/NextSessionProvider.tsx**
 
-```jsx
+```tsx
 'use client';
 
 import { SessionProvider } from 'next-auth/react';
@@ -739,12 +741,95 @@ export default NextSessionProvider;
 
 **app/layout.tsx**
 
-```jsx
+```tsx
 <body>
 	<NextSessionProvider>{children}</NextSessionProvider>
 </body>
 ```
 
-Now the authentication is configured on the client and you can try logging in!
+Now the authentication is configured for the client and you can try logging in!
+
+---
+
+### Navbar
+
+Next its time to add the `Nav` component to the app. In `components/Nav/Nav.tsx` create `Nav.tsx`.
+
+This component renders `ThemeToggle` and `UserAccountNav` components that will be created later on.
+
+Additionally, it uses a server action `getAuthSession` to determine if a user is authenticated which needs created.
+
+#### Nav.tsx
+
+```tsx
+import { getAuthSession } from '@/app/actions/auth';
+import Link from 'next/link';
+import ThemeToggle from './ThemeToggle';
+import UserAccountNav from './UserAccountNav';
+import { buttonVariants } from '../ui/button';
+
+const Nav = async () => {
+	const session = await getAuthSession();
+
+	return (
+		<div className="py-4 fixed inset-x-0 top-0 bg-white/75 dark:bg-slate-950/75 z-[50] h-fit border-b-2 border-slate-200 dark:border-slate-800 backdrop-blur-sm">
+			<div className="flex items-center justify-between h-full gap-2 px-4 sm:px-8 mx-auto max-w-7xl">
+				{/* Logo */}
+				<Link href="/" className="flex items-center gap-2">
+					<p className="font-bold">Money Mapper</p>
+				</Link>
+
+				<div className="flex lg:gap-8 gap-4">
+					{session?.user && (
+						<div className="md:flex gap-4 hidden">
+							<Link className={buttonVariants({ variant: 'outline' })} href="/money">
+								Money
+							</Link>
+							<Link
+								className={buttonVariants({ variant: 'outline' })}
+								href="/dashboard"
+							>
+								Dashboard
+							</Link>
+						</div>
+					)}
+
+					<div className="flex items-center gap-2 lg:gap-4">
+						<ThemeToggle />
+						{session?.user && <UserAccountNav user={session.user} />}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default Nav;
+```
+
+#### auth.ts
+
+```ts
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getServerSession } from 'next-auth';
+
+export const getAuthSession = () => {
+	return getServerSession(authOptions);
+};
+```
+
+Lastly, add the `Nav` component to `RootLayout` so that it gets rendered on every page.
+
+```jsx
+<NextSessionProvider>
+	<Nav />
+
+	{children}
+</NextSessionProvider>
+```
+
+#### Theme Toggler
+
+#### User Account Nav
 
 ---
