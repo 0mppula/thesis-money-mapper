@@ -69,8 +69,6 @@ Running commands with npm `npm run [command]`
 | :------ | :--------------------------------------- |
 | `dev`   | Starts a development instance of the app |
 
-[Money Mapper]: https://moneymapper.vercel.app/
-
 ---
 
 ## Tech Stack
@@ -1064,3 +1062,5 @@ export default UserAccountNav;
 ```
 
 ---
+
+[Money Mapper]: https://moneymapper.vercel.app/
