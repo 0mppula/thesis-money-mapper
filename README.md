@@ -1063,4 +1063,4 @@ export default UserAccountNav;
 
 ---
 
-[Thesis Money Mapper]: https://thesis-moneymapper.vercel.app/
+[Thesis Money Mapper]: https://thesismoneymapper.vercel.app/
