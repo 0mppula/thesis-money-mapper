@@ -1,20 +1,20 @@
-# Thesis Money Mapper
+# Thesis Thesis Money Mapper
 
-## What is Money Mapper?
+## What is Thesis Money Mapper?
 
-[Money Mapper][Money Mapper] is a Next.js 13 fullstack finance tracker for organizing personal finances. Covers income, taxes, assets, debt, and net worth management. Utilizes next-auth for user authentication and stores user data in a MongoDB database with prisma ORM. The app uses shadcn-ui with tailwind css, providing a visually appealing and responsive user interface. Global client state is managed with zustand, ensuring efficient and streamlined data management across the app. Emphasizing user experience, the app offers both dark and light modes to suit individual preferences. To enhance data visualization, financial information is presented through interactive charts and comprehensive tables, allowing users to gain valuable insights at a glance.
+[Thesis Money Mapper][Thesis Money Mapper] is a Next.js 13 fullstack finance tracker for organizing personal finances. Covers income, taxes, assets, debt, and net worth management. Utilizes next-auth for user authentication and stores user data in a MongoDB database with prisma ORM. The app uses shadcn-ui with tailwind css, providing a visually appealing and responsive user interface. Global client state is managed with zustand, ensuring efficient and streamlined data management across the app. Emphasizing user experience, the app offers both dark and light modes to suit individual preferences. To enhance data visualization, financial information is presented through interactive charts and comprehensive tables, allowing users to gain valuable insights at a glance.
 
 ## The Dashboard page
 
-![Money Mapper dashboad page](/public/images/dashboard.png)
+![Thesis Money Mapper dashboad page](/public/images/dashboard.png)
 
 ## The Money page
 
-![Money Mapper money page](/public/images/money.png)
+![Thesis Money Mapper money page](/public/images/money.png)
 
 ## The Login page
 
-![Money Mapper login page](/public/images/login.png)
+![Thesis Money Mapper login page](/public/images/login.png)
 
 ## How to Set Up the Project Locally
 
@@ -190,8 +190,8 @@ Replace the default metadata in the root layout of the project.
 ```tsx
 // app/layout.tsx
 export const metadata: Metadata = {
-	title: 'Money Mapper',
-	description: 'Take control of your finances with Money Mapper, ...',
+	title: 'Thesis Money Mapper',
+	description: 'Take control of your finances with Thesis Money Mapper, ...',
 };
 ```
 
@@ -880,7 +880,7 @@ const Nav = async () => {
 			<div className="flex items-center justify-between h-full gap-2 px-4 sm:px-8 mx-auto max-w-7xl">
 				{/* Logo */}
 				<Link href="/" className="flex items-center gap-2">
-					<p className="font-bold">Money Mapper</p>
+					<p className="font-bold">Thesis Money Mapper</p>
 				</Link>
 
 				<div className="flex lg:gap-8 gap-4">
@@ -1063,4 +1063,4 @@ export default UserAccountNav;
 
 ---
 
-[Money Mapper]: https://moneymapper.vercel.app/
+[Thesis Money Mapper]: https://thesis-moneymapper.vercel.app/
