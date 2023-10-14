@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
--   [What is Thesis Money Mapper?](#what-is-thesis-money-mapper-)
+-   [What is Thesis Money Mapper?](#what-is-thesis-money-mapper)
 -   [The Dashboard page](#the-dashboard-page)
 -   [The Money page](#the-money-page)
 -   [The Login page](#the-login-page)
