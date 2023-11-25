@@ -7,6 +7,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import NextSessionProvider from '@/components/providers/NextSessionProvider';
 import Nav from '@/components/Nav/Nav';
+import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -22,6 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<Nav />
 
 					{children}
+
+					<Toaster />
 				</NextSessionProvider>
 			</body>
 		</html>
