@@ -33,6 +33,8 @@
         -   [Database Connection String](#database-connection-string)
         -   [Insalling Prisma](#insalling-prisma)
         -   [Initialize the Prisma Schema](#initialize-the-prisma-schema)
+        -   [Test the Database Connection](#test-the-database-connection)
+        -   [Prisma Models](#prisma-models)
         -   [Users model](#users-model)
         -   [Account model](#account-model)
         -   [FinancialRecord model](#financialrecord-model)
@@ -348,7 +350,19 @@ datasource db {
 
 The value for the `url` is fetched from your `.env` file.
 
-This app has user authentication and the ability to record users financial data. Users and their financial records are saved to the database, so their respective Prisma models must be defined.
+#### Test the Database Connection
+
+To test out if a connection can be successfully made with the database using Prisma run the following command:
+
+```shell
+npx prisma db pull
+```
+
+This command simply introspects the MongoDB database and writes its inferred schema into the `prisma/schema.prisma`. However, in this case, this should fail because the database has yet to contain any collections. If the only error you get is an introspection error, the connection was successfully made.
+
+#### Prisma Models
+
+This app has user authentication and has the ability to record users financial data. Users and their financial records are saved to the database, so their respective Prisma models must be defined.
 
 These models auto-generate types for our application based on the models structure. Additionally, the `User` and `Account` models include fields for `next-auth`'s Prisma adapter which will be used when authenticating users later on.
 
