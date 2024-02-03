@@ -30,12 +30,12 @@ const FinancialRecordControls = ({
 		editFinancialRecordModal.setIsOpen(true);
 		editFinancialRecordModal.setEditedRecordId(financialRecordId);
 		editFinancialRecordModal.setEditedRecord(financialRecord);
-	}, [editFinancialRecordModal, financialRecord]);
+	}, [editFinancialRecordModal, financialRecord, financialRecordId]);
 
 	const handleDelete = useCallback(() => {
 		deleteFinancialRecordModal.setIsOpen(true);
 		deleteFinancialRecordModal.setDeletedRecordId(financialRecordId);
-	}, [deleteFinancialRecordModal]);
+	}, [deleteFinancialRecordModal, financialRecordId]);
 
 	return (
 		<>
