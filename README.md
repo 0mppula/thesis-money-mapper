@@ -68,6 +68,8 @@
 
 [Thesis Money Mapper][Thesis Money Mapper] is a Next.js 13 fullstack finance tracker for organizing personal finances. Covers income, taxes, assets, debt, and net worth management. Utilizes next-auth for user authentication and stores user data in a MongoDB database with prisma ORM. The app uses shadcn-ui with tailwind css, providing a visually appealing and responsive user interface. Global client state is managed with zustand, ensuring efficient and streamlined data management across the app. Emphasizing user experience, the app offers both dark and light modes to suit individual preferences. To enhance data visualization, financial information is presented through interactive charts and comprehensive tables, allowing users to gain valuable insights at a glance.
 
+I developed this application as part of my university thesis at LAB University of Applied Sciences in Lahti. You can find my thesis [here][thesis link].
+
 ## The Dashboard page
 
 ![Thesis Money Mapper dashboad page](/public/images/dashboard.png)
@@ -1140,3 +1142,4 @@ export default UserAccountNav;
 ---
 
 [Thesis Money Mapper]: https://thesismoneymapper.vercel.app/
+[thesis link]: https://www.theseus.fi/handle/10024/850318
