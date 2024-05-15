@@ -66,7 +66,7 @@
 
 ## What is Thesis Money Mapper?
 
-[Thesis Money Mapper][Thesis Money Mapper] is a Next.js 13 fullstack finance tracker for organizing personal finances. Covers income, taxes, assets, debt, and net worth management. Utilizes next-auth for user authentication and stores user data in a MongoDB database with prisma ORM. The app uses shadcn-ui with tailwind css, providing a visually appealing and responsive user interface. Global client state is managed with zustand, ensuring efficient and streamlined data management across the app. Emphasizing user experience, the app offers both dark and light modes to suit individual preferences. To enhance data visualization, financial information is presented through interactive charts and comprehensive tables, allowing users to gain valuable insights at a glance.
+[Thesis Money Mapper][Thesis Money Mapper] is a Next.js fullstack finance tracker for organizing personal finances. Covers income, taxes, assets, debt, and net worth management. Utilizes next-auth for user authentication and stores user data in a MongoDB database with prisma ORM. The app uses shadcn-ui with tailwind css, providing a visually appealing and responsive user interface. Global client state is managed with zustand, ensuring efficient and streamlined data management across the app. Emphasizing user experience, the app offers both dark and light modes to suit individual preferences. To enhance data visualization, financial information is presented through interactive charts and comprehensive tables, allowing users to gain valuable insights at a glance.
 
 I developed this application as part of my university thesis at LAB University of Applied Sciences in Lahti. You can find my thesis [here][thesis link].
 
@@ -174,7 +174,7 @@ Running commands with npm `npm run [command]`
 
 ### Initializing the Project
 
-The easiest way to create a Next.js 13 app is by using `create-next-app` ([Next.js 2023](https://nextjs.org/docs/pages/api-reference/create-next-app)).
+The easiest way to create a Next.js app is by using `create-next-app` ([Next.js 2023](https://nextjs.org/docs/pages/api-reference/create-next-app)).
 
 Open a new terminal window and run the command below. This command will ensure that you initialize your project using the latest version of Next.js.
 
@@ -501,7 +501,7 @@ Its easier to install components as you find the need for them with a single com
 
 The login page of the app is the landing page (pathname `/`), so it needs to be created in the root `page.tsx` file.
 
-For oragnizational purposes you can create a new `(site)` directory in the root of the project and place all the landing page specific files in it like its `page.tsx` file. This will keep the original functionality of the root `page.tsx` but structures the project differently ([route groups](https://nextjs.org/docs/app/building-your-application/routing/colocation#route-groups) are completely optional in Next.js 13).
+For oragnizational purposes you can create a new `(site)` directory in the root of the project and place all the landing page specific files in it like its `page.tsx` file. This will keep the original functionality of the root `page.tsx` but structures the project differently ([route groups](https://nextjs.org/docs/app/building-your-application/routing/colocation#route-groups) are completely optional in Next.js).
 
 In `app/(site)/page.tsx` create the login page:
 
